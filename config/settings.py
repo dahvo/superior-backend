@@ -75,7 +75,7 @@ DEBUG = env("DEBUG")
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
 if CLOUDRUN_SERVICE_URL:
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+    ALLOWED_HOSTS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
     CSRF_TRUSTED_ORIGINS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
     SECURE_SSL_REDIRECT = True
 else:
@@ -298,13 +298,13 @@ EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 #     name = f"projects/{project_id}/secrets/{outgoing_email_key}/versions/latest"
 #     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 #     env.read_env(io.StringIO(payload))
-# SENDGRID_API_KEY = env("SENDGRID_API_KEY")
-# ANYMAIL = {
-#     "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
-#     "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID", default=True),
-#     "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT", default=None),
-#     "SENDGRID_API_URL": env("SENDGRID_API_URL", default="https://api.sendgrid.com/v3/"),
-# }
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+ANYMAIL = {
+    "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
+    "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID", default=True),
+    "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT", default=None),
+    "SENDGRID_API_URL": env("SENDGRID_API_URL", default="https://api.sendgrid.com/v3/"),
+}
 # TEMPLATES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
