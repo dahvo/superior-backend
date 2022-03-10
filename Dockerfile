@@ -24,7 +24,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip
+#RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy local code to the container image.
