@@ -46,7 +46,7 @@ def createsuperuser(apps: StateApps, schema_editor: DatabaseSchemaEditor) -> Non
         )
 
     # Create a new user using acquired password, stripping any accidentally stored newline characters
-    #User.objects.create_superuser("admin", password=admin_password.strip())
+    User.objects.create_superuser("admin", password=admin_password.strip())
 
 
 class Migration(migrations.Migration):

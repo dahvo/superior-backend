@@ -7,10 +7,8 @@ config.settings.configure()
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-SECRET_KEY = env(
-    "DJANGO_SECRET_KEY",
-    default="lh1qbvUVJuZXtSJjv2NDtqQ8ibbZCRdOI1iuFVdGy3ocLI5SS1AHcTBVNKhnRa1g",
-)
+SECRET_KEY = "lh1qbvUVJuZXtSJjv2NDtqQ8ibbZCRdOI1iuFVdGy3ocLI5SS1AHcTBVNKhnRa1g"
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#test-runner
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 

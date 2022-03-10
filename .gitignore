@@ -1,7 +1,6 @@
 newvenv
 my_project
 venv
-.gcloudignore
 .vscode
 ...env
 .pytest_cache

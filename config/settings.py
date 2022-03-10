@@ -74,8 +74,9 @@ DEBUG = env("DEBUG")
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
 if CLOUDRUN_SERVICE_URL:
+    #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+    CSRF_TRUSTED_ORIGINS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ["*"]
@@ -102,20 +103,11 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "collectfast",
-    "anymail",
     "storages",
     "superiorskip.users",
 ]
 # THIRD_PARTY_APPS = [
     
-# ]
-# LOCAL_APPS = [
-    
-#     # Your stuff: custom apps go here
-# ]
-# INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
 # Application definition
 # https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = "config.wsgi.application"
@@ -280,21 +272,37 @@ SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[superiorskip]",
+    default="[SuperiorSkip]",
 )
 EMAIL_TIMEOUT = 5
 # Anymail
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail
-#INSTALLED_APPS += ["anymail"]  # noqa F405
+INSTALLED_APPS += ["anymail"]  # noqa F405
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps/sendgrid/
+
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+
+# _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+# if os.getenv("TRAMPOLINE_CI", None):
+#     # We are in CI, so just create a placeholder user for unit testing.
+#     SENDGRID_API_KEY = "test"
+# elif(os.environ.get("GOOGLE_CLOUD_PROJECT")):
+#     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+#     client = secretmanager.SecretManagerServiceClient()
+
+#     # Retrieve the previously stored admin password
+#     outgoing_email_key = os.environ.get("SENDGRID_API_KEY", "sendgrid_sender_key")
+#     name = f"projects/{project_id}/secrets/{outgoing_email_key}/versions/latest"
+#     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+#     env.read_env(io.StringIO(payload))
+# SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 # ANYMAIL = {
 #     "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
-#     "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID"),
-#     "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT"),
+#     "SENDGRID_GENERATE_MESSAGE_ID": env("SENDGRID_GENERATE_MESSAGE_ID", default=True),
+#     "SENDGRID_MERGE_FIELD_FORMAT": env("SENDGRID_MERGE_FIELD_FORMAT", default=None),
 #     "SENDGRID_API_URL": env("SENDGRID_API_URL", default="https://api.sendgrid.com/v3/"),
 # }
 # TEMPLATES
@@ -367,7 +375,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
-ADMIN_URL = "admin/"
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [(""" """, "dahvo@superiorskip.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -376,14 +384,17 @@ MANAGERS = ADMINS
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.
-# ADMIN_URL = env("DJANGO_ADMIN_URL")
 
+try:
+    ADMIN_URL = env("DJANGO_ADMIN_URL")
+except:
+    ADMIN_URL = "admin/"
 
 
 # Collectfast
 # ------------------------------------------------------------------------------
 # https://github.com/antonagestam/collectfast#installation
-#INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
+INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 
 # LOGGING
 # ------------------------------------------------------------------------------

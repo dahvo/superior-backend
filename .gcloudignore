@@ -1,0 +1,21 @@
+newvenv
+my_project
+venv
+.gcloudignore
+.vscode
+...env
+.pytest_cache
+test
+.github
+.git
+.pre-commit-config.yaml
+.plintrc
+cloud_sql_proxy
+conftest.py
+import requests.py
+noxfile_config.py
+pytest.ini
+readme.md
+requirements-test.txt
+setup.cfg
+__pycache__
