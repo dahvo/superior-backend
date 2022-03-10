@@ -4,6 +4,7 @@ venv
 .gcloudignore
 .vscode
 ...env
+....env
 .pytest_cache
 test
 .github

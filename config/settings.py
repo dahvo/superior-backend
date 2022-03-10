@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "storages",
     "superiorskip.users",
+    "corsheaders",
 ]
 # THIRD_PARTY_APPS = [
     
@@ -115,6 +116,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -124,6 +127,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
 ]
 
 
@@ -265,7 +269,7 @@ MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="superior-skip <noreply@superiorskip.com>",
+    default="superiorskip verify@superiorskip.com>",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
@@ -284,20 +288,6 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 # https://anymail.readthedocs.io/en/stable/esps/sendgrid/
 
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-
-# _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-# if os.getenv("TRAMPOLINE_CI", None):
-#     # We are in CI, so just create a placeholder user for unit testing.
-#     SENDGRID_API_KEY = "test"
-# elif(os.environ.get("GOOGLE_CLOUD_PROJECT")):
-#     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-#     client = secretmanager.SecretManagerServiceClient()
-
-#     # Retrieve the previously stored admin password
-#     outgoing_email_key = os.environ.get("SENDGRID_API_KEY", "sendgrid_sender_key")
-#     name = f"projects/{project_id}/secrets/{outgoing_email_key}/versions/latest"
-#     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
-#     env.read_env(io.StringIO(payload))
 SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 ANYMAIL = {
     "SENDGRID_API_KEY": env("SENDGRID_API_KEY"),
