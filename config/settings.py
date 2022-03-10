@@ -75,7 +75,7 @@ DEBUG = env("DEBUG")
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
 if CLOUDRUN_SERVICE_URL:
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+    ALLOWED_HOSTS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
     CSRF_TRUSTED_ORIGINS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
     SECURE_SSL_REDIRECT = True
 else:
