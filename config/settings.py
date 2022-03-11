@@ -105,11 +105,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "storages",
     "superiorskip.users",
-<<<<<<< HEAD
-    "bootstrap5",
-=======
     "corsheaders",
->>>>>>> eac3bcd5c8dbddf2f4024589832eadbcdf01ec79
+    "bootstrap5",
 ]
 # THIRD_PARTY_APPS = [
     
