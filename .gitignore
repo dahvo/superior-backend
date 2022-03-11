@@ -4,3 +4,9 @@ venv
 .vscode
 ...env
 .pytest_cache
+config/__pycache__/settings.cpython-310.pyc
+__pycache__
+....env
+.env
+....env
+config/__pycache__/settings.cpython-310.pyc

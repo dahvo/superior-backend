@@ -64,7 +64,7 @@ elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
 else:
     raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
 # [END cloudrun_django_secret_config]
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "123456")
 
 DEBUG = env("DEBUG")
 
@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "storages",
     "superiorskip.users",
+    "bootstrap5",
 ]
 # THIRD_PARTY_APPS = [
     
