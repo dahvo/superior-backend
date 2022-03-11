@@ -27,9 +27,6 @@ COPY requirements.txt .
 #RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-
-
-ENV SENDGRID_API_KEY "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"
 # Copy local code to the container image.
 COPY . .
 
