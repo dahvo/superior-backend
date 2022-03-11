@@ -19,3 +19,4 @@ readme.md
 requirements-test.txt
 setup.cfg
 __pycache__
+*.pyc
