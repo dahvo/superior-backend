@@ -22,7 +22,7 @@ WORKDIR $APP_HOME
 # RUN db_path = {os.path.join($APP_HOME, 'db.sqlite3')}
 # Removes output stream buffering, allowing for more efficient logging
 ENV PYTHONUNBUFFERED 1
-
+ENV 
 # Install dependencies
 COPY requirements.txt .
 #RUN pip install --no-cache-dir --upgrade pip
@@ -37,4 +37,4 @@ COPY . .
 # to be equal to the cores available.
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
 #CMD exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 0 superiorskip.core.asgi:application
-CMD exec gunicorn --bind 0.0.0.0:$PORT config.asgi:application --chdir=/app -k uvicorn.workers.UvicornWorker
+CMD exec gunicorn --bind 0.0.0.0:$PORT config.asgi:application --preload --chdir=/app -k uvicorn.workers.UvicornWorker

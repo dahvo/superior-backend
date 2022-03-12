@@ -6,14 +6,14 @@ crispy-bootstrap5==0.6  # https://github.com/django-crispy-forms/crispy-bootstra
 uvicorn[standard]==0.17.5  # https://github.com/encode/uvicorn
 Collectfast==2.2.0  # https://github.com/antonagestam/collectfast
 argon2-cffi==21.3.0  # https://github.com/hynek/argon2_cffi
-whitenoise==6.0.0
-brotlipy==0.7.0
-slimit==0.8.1
-beautifulsoup4==4.10.0
-django-phonenumber-field==6.1.0; python_version >= "3.7"
-sqlparse==0.4.2; python_version >= "3.6"
-weasyprint==54.2; python_version >= "3.6"
-stripe==2.66.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+# whitenoise==6.0.0
+# brotlipy==0.7.0
+# slimit==0.8.1
+# beautifulsoup4==4.10.0
+# django-phonenumber-field==6.1.0
+# sqlparse==0.4.2
+# weasyprint==54.2
+# stripe==2.66.0
 # Django
 # ------------------------------------------------------------------------------
 Django==4.0.3

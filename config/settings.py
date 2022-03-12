@@ -73,7 +73,8 @@ DEBUG = env("DEBUG")
 # SECURITY WARNING: It's recommended that you use this when
 # running in production. The URL will be known once you first deploy
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
-CLOUDRUN_SERVICE_URL = env(urlparse("CLOUDRUN_SERVICE_URL").netloc, default=None)
+# CLOUDRUN_SERVICE_URL = env(urlparse("CLOUDRUN_SERVICE_URL").netloc, default=None)
+CLOUDRUN_SERVICE_URL = env("https://backend-service-bdy2pvtljq-uc.a.run.app", default=None)
 if CLOUDRUN_SERVICE_URL:
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     ALLOWED_HOSTS = ["CLOUDRUN_SERVICE_URL"]
