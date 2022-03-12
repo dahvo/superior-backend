@@ -22,7 +22,7 @@ WORKDIR $APP_HOME
 # RUN db_path = {os.path.join($APP_HOME, 'db.sqlite3')}
 # Removes output stream buffering, allowing for more efficient logging
 ENV PYTHONUNBUFFERED 1
-ENV 
+#ENV 
 # Install dependencies
 COPY requirements.txt .
 #RUN pip install --no-cache-dir --upgrade pip
