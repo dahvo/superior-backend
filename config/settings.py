@@ -89,13 +89,13 @@ except:
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
 # CLOUDRUN_SERVICE_URL = env(urlparse("CLOUDRUN_SERVICE_URL").netloc, default=None)
 if len("CLOUDRUN_SERVICE_URL")> 0:
-    try:
-        CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
-    except:
-        CLOUDRUN_SERVICE_URL = "https://backend-service-bdy2pvtljq-uc.a.run.app"
+    # try:
+    #     CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
+    # except:
+    CLOUDRUN_SERVICE_URL = "https://backend-service-bdy2pvtljq-uc.a.run.app"
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    ALLOWED_HOSTS = ["CLOUDRUN_SERVICE_URL"]
-    CSRF_TRUSTED_ORIGINS = ["CLOUDRUN_SERVICE_URL"]
+    ALLOWED_HOSTS = [CLOUDRUN_SERVICE_URL]
+    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
     SECURE_SSL_REDIRECT = True
     # SECURITY
     # ------------------------------------------------------------------------------
