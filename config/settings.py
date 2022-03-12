@@ -107,6 +107,7 @@ INSTALLED_APPS = [
     "superiorskip.users",
     "corsheaders",
     "bootstrap5",
+    "compressor", 
 ]
 # THIRD_PARTY_APPS = [
     
@@ -118,6 +119,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -243,6 +246,12 @@ STATICFILES_DIRS = [str(APPS_DIR / "static")]
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    'compressor.finders.CompressorFinder',
+    "compressor.filters.jsmin.SlimItFilter",
+    "compressor.filters.cssmin.CSSCompressorFilter",
+    "compressor.parser.BeautifulSoupParser",
+    "compressor.parser.LxmlParser",
+    "compressor.storage.BrotliCompressorFileStorage",
 ]
 # Define static storage via django-storages[google]
 # ------------------------------------------------------------------------------
