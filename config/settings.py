@@ -64,25 +64,69 @@ env_file = os.path.join(ROOT_DIR, ".env")
 # else:
 #     raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
 # # [END cloudrun_django_secret_config]
-SECRET_KEY = env("SECRET_KEY", "123456")
-DATABASE_URL = env("DATABASE_URL", f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}")
-GS_BUCKET_NAME = env(os.environ.get("GS_BUCKET_NAME"), None)
-DEBUG = env("DEBUG")
+try:
+    SECRET_KEY = env("SECRET_KEY")
+except:
+    SECRET_KEY = "27isMg8tojejzDr32VPVjQwjEiGuvJpiuDBJ3tQtnUHdkX73ME4vA8a2a"
+try:
+    DATABASE_URL = env("DATABASE_URL")
+except:
+    DATABASE_URL =  f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}"
+    
+try:
+    GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+except:
+    GS_BUCKET_NAME = None
+
+try:
+    DEBUG = env("DEBUG")
+except:
+    DEBUG = True
 
 # [START cloudrun_django_csrf]
 # SECURITY WARNING: It's recommended that you use this when
 # running in production. The URL will be known once you first deploy
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
 # CLOUDRUN_SERVICE_URL = env(urlparse("CLOUDRUN_SERVICE_URL").netloc, default=None)
-CLOUDRUN_SERVICE_URL = env("https://backend-service-bdy2pvtljq-uc.a.run.app", default=None)
-if CLOUDRUN_SERVICE_URL:
+if len("CLOUDRUN_SERVICE_URL")> 0:
+    try:
+        CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
+    except:
+        CLOUDRUN_SERVICE_URL = "https://backend-service-bdy2pvtljq-uc.a.run.app"
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     ALLOWED_HOSTS = ["CLOUDRUN_SERVICE_URL"]
     CSRF_TRUSTED_ORIGINS = ["CLOUDRUN_SERVICE_URL"]
     SECURE_SSL_REDIRECT = True
+    # SECURITY
+    # ------------------------------------------------------------------------------
+    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
+    SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
+    # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
+    SESSION_COOKIE_SECURE = True
+    # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
+    CSRF_COOKIE_SECURE = True
+    # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
+    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
+    # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
+    SECURE_HSTS_SECONDS = 60
+    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
+        "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
+    )
+    # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
+    SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
+    # https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
+    SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
+        "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
+    )
+
 else:
     ALLOWED_HOSTS = ["*"]
-# [END cloudrun_django_csrf]
+    raise Exception("UNSECURE MODE ACTIVATED")
+    
+
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -353,30 +397,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (str(APPS_DIR / "fixtures"),)
 
-# SECURITY
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-ssl-redirect
-SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
-# https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-secure
-SESSION_COOKIE_SECURE = True
-# https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-secure
-CSRF_COOKIE_SECURE = True
-# https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
-# TODO: set this to 60 seconds first and then to 518400 once you prove the former works
-SECURE_HSTS_SECONDS = 60
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
-)
-# https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-preload
-SECURE_HSTS_PRELOAD = env.bool("DJANGO_SECURE_HSTS_PRELOAD", default=True)
-# https://docs.djangoproject.com/en/dev/ref/middleware/#x-content-type-options-nosniff
-SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
-)
+
 
 
 
@@ -412,42 +433,42 @@ INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-#     "formatters": {
-#         "verbose": {
-#             "format": "%(levelname)s %(asctime)s %(module)s "
-#             "%(process)d %(thread)d %(message)s"
-#         }
-#     },
-#     "handlers": {
-#         "mail_admins": {
-#             "level": "ERROR",
-#             "filters": ["require_debug_false"],
-#             "class": "django.utils.log.AdminEmailHandler",
-#         },
-#         "console": {
-#             "level": "DEBUG",
-#             "class": "logging.StreamHandler",
-#             "formatter": "verbose",
-#         },
-#     },
-#     "root": {"level": "INFO", "handlers": ["console"]},
-#     "loggers": {
-#         "django.request": {
-#             "handlers": ["mail_admins"],
-#             "level": "ERROR",
-#             "propagate": True,
-#         },
-#         "django.security.DisallowedHost": {
-#             "level": "ERROR",
-#             "handlers": ["console", "mail_admins"],
-#             "propagate": True,
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s "
+            "%(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "mail_admins": {
+            "level": "ERROR",
+            "filters": ["require_debug_false"],
+            "class": "django.utils.log.AdminEmailHandler",
+        },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {"level": "INFO", "handlers": ["console"]},
+    "loggers": {
+        "django.request": {
+            "handlers": ["mail_admins"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+        "django.security.DisallowedHost": {
+            "level": "ERROR",
+            "handlers": ["console", "mail_admins"],
+            "propagate": True,
+        },
+    },
+}
 
 # Your stuff...
 # ------------------------------------------------------------------------------
