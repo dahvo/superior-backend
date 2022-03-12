@@ -73,7 +73,7 @@ DEBUG = env("DEBUG")
 # SECURITY WARNING: It's recommended that you use this when
 # running in production. The URL will be known once you first deploy
 # to Cloud Run. This code takes the URL and converts it to both these settings formats.
-CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
+CLOUDRUN_SERVICE_URL = env(urlparse("CLOUDRUN_SERVICE_URL").netloc, default=None)
 if CLOUDRUN_SERVICE_URL:
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     ALLOWED_HOSTS = ["CLOUDRUN_SERVICE_URL"]
@@ -172,11 +172,11 @@ if os.getenv("DATABASE_URL", None):
     DATABASES = {"default": env.db()}
 
 # If the flag as been set, configure to use proxy
-else:
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = 5432
-
 # else:
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
+
+# # else:
 #     f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}"
 #     DATABASES = {"default": env.db()}
     
