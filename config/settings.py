@@ -92,7 +92,7 @@ if len("CLOUDRUN_SERVICE_URL")> 0:
     # try:
     #     CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
     # except:
-    CLOUDRUN_SERVICE_URL = "https://backend-service-bdy2pvtljq-uc.a.run.app"
+    CLOUDRUN_SERVICE_URL = "backend-service-bdy2pvtljq-uc.a.run.app"
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     ALLOWED_HOSTS = [CLOUDRUN_SERVICE_URL]
     CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
