@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # from .base import environ
-import io
+# import io
 import os
 from urllib.parse import urlparse
 from pathlib import Path
 import environ
-import google.auth
-from google.cloud import secretmanager
+# import google.auth
+# from google.cloud import secretmanager
 
 # ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -31,41 +31,42 @@ env = environ.Env(DEBUG=(bool, True))
 env_file = os.path.join(ROOT_DIR, ".env")
 
 # Attempt to load the Project ID into the environment, safely failing on error.
-try:
-    _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
-except google.auth.exceptions.DefaultCredentialsError:
-    pass
+# try:
+#     _, os.environ["GOOGLE_CLOUD_PROJECT"] = google.auth.default()
+# except google.auth.exceptions.DefaultCredentialsError:
+#     pass
 
-if os.path.isfile(env_file):
-    # Use a local secret file, if provided
+# if os.path.isfile(env_file):
+#     # Use a local secret file, if provided
 
-    env.read_env(env_file)
-# [START_EXCLUDE]
-elif os.getenv("TRAMPOLINE_CI", None):
-    # Create local settings if running with CI, for unit testing
+#     env.read_env(env_file)
+# # [START_EXCLUDE]
+# elif os.getenv("TRAMPOLINE_CI", None):
+#     # Create local settings if running with CI, for unit testing
 
-    placeholder = (
-        f"SECRET_KEY=a\n"
-        "GS_BUCKET_NAME=None\n"
-        f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}"
-    )
-    env.read_env(io.StringIO(placeholder))
-# [END_EXCLUDE]
-elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    # Pull secrets from Secret Manager
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+#     placeholder = (
+#         f"SECRET_KEY=a\n"
+#         "GS_BUCKET_NAME=None\n"
+#         f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}"
+#     )
+#     env.read_env(io.StringIO(placeholder))
+# # [END_EXCLUDE]
+# elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+#     # Pull secrets from Secret Manager
+#     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
-    client = secretmanager.SecretManagerServiceClient()
-    settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
-    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+#     client = secretmanager.SecretManagerServiceClient()
+#     settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
+#     name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
+#     payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
 
-    env.read_env(io.StringIO(payload))
-else:
-    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
-# [END cloudrun_django_secret_config]
-SECRET_KEY = os.environ.get("SECRET_KEY", "123456")
-
+#     env.read_env(io.StringIO(payload))
+# else:
+#     raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+# # [END cloudrun_django_secret_config]
+SECRET_KEY = env("SECRET_KEY", "123456")
+DATABASE_URL = env("DATABASE_URL", f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}")
+GS_BUCKET_NAME = env(os.environ.get("GS_BUCKET_NAME"), None)
 DEBUG = env("DEBUG")
 
 # [START cloudrun_django_csrf]
@@ -75,8 +76,8 @@ DEBUG = env("DEBUG")
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
 if CLOUDRUN_SERVICE_URL:
     #ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    ALLOWED_HOSTS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
-    CSRF_TRUSTED_ORIGINS = ["backend-service-bdy2pvtljq-uc.a.run.app"]
+    ALLOWED_HOSTS = ["CLOUDRUN_SERVICE_URL"]
+    CSRF_TRUSTED_ORIGINS = ["CLOUDRUN_SERVICE_URL"]
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ["*"]
@@ -167,12 +168,18 @@ TEMPLATES = [
 # Database
 # [START cloudrun_django_database_config]
 # Use django-environ to parse the connection string
-DATABASES = {"default": env.db()}
+if os.getenv("DATABASE_URL", None):
+    DATABASES = {"default": env.db()}
 
 # If the flag as been set, configure to use proxy
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+elif os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["HOST"] = "127.0.0.1"
     DATABASES["default"]["PORT"] = 5432
+
+else:
+    f"DATABASE_URL=sqlite://{os.path.join(ROOT_DIR, 'db.sqlite3')}"
+    DATABASES = {"default": env.db()}
+    
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -257,7 +264,7 @@ STATICFILES_FINDERS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 # [START cloudrun_django_static_config]
-GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_BUCKET_NAME = env("GS_BUCKET_NAME", None)
 STATIC_URL = "/static/"
 #DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 #STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"

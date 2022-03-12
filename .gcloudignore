@@ -20,3 +20,4 @@ requirements-test.txt
 setup.cfg
 __pycache__
 *.pyc
+users/tests
