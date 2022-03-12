@@ -11,3 +11,4 @@ __pycache__
 ....env
 config/__pycache__/settings.cpython-310.pyc
 config/__pycache__/settings.cpython-310.pyc
+*.pyc
