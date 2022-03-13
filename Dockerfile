@@ -31,6 +31,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy local code to the container image.
 COPY . .
 
+
+###REACT STARTUP???
+FROM node:10
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app/package.json
+RUN npm install
+RUN npm install react-scripts@3.1.1 -g
+CMD ["npm", "start"]
+
+
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
